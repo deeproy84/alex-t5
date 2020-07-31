@@ -14,6 +14,17 @@ if not BASE_DIR or BASE_DIR == "gs://":
   raise ValueError("You must enter a BASE_DIR.")
 DATA_DIR = os.path.join(BASE_DIR, "data")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
+BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
+MODEL_SIZE = "11B" @param["11B"]
+  # Set parallelism and batch size to fit on v2-8 TPU (if possible).
+model_parallelism, train_batch_size, keep_checkpoint_max = {
+    "small": (1, 256, 16),
+    "base": (2, 128, 8),
+    "large": (8, 64, 4),
+    "3B": (8, 16, 1),
+    "11B": (8, 16, 1)}[MODEL_SIZE]
+PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
+MODEL_DIR = os.path.join(MODELS_DIR, MODEL_SIZE)
 ON_CLOUD = True
 
 
@@ -167,18 +178,7 @@ t5.data.MixtureRegistry.add(
 
 #Step 1
 
-BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
-MODEL_SIZE = "11B" @param["11B"]
-  # Set parallelism and batch size to fit on v2-8 TPU (if possible).
-model_parallelism, train_batch_size, keep_checkpoint_max = {
-    "small": (1, 256, 16),
-    "base": (2, 128, 8),
-    "large": (8, 64, 4),
-    "3B": (8, 16, 1),
-    "11B": (8, 16, 1)}[MODEL_SIZE]
-PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
-MODEL_DIR = os.path.join(MODELS_DIR, MODEL_SIZE)
-  
+ 
 tf.io.gfile.makedirs(MODEL_DIR)
 # The models from our paper are based on the Mesh Tensorflow Transformer.
 model = t5.models.MtfModel(
