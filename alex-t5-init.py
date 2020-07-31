@@ -1,6 +1,5 @@
 print("Installing dependencies...")
-%tensorflow_version 2.x
-!pip install -q t5
+!pip3 install -q t5
 
 import functools
 import os
@@ -13,7 +12,7 @@ import tensorflow_datasets as tfds
 
 import t5
 
-BASE_DIR = "gs://alex_t5" #@param { type: "string" }
+BASE_DIR = "gs://alex-t5" #@param { type: "string" }
 if not BASE_DIR or BASE_DIR == "gs://":
   raise ValueError("You must enter a BASE_DIR.")
 DATA_DIR = os.path.join(BASE_DIR, "data")
