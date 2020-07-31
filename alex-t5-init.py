@@ -167,7 +167,7 @@ t5.data.MixtureRegistry.add(
 
 #Step 1
 
-MODEL_SIZE = "11B" #@param["small", "base", "large", "3B", "11B"]
+MODEL_SIZE = @param["11B"] #@param["small", "base", "large", "3B", "11B"]
 # Public GCS path for T5 pre-trained model checkpoints
 BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
 PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
