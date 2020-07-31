@@ -167,20 +167,20 @@ t5.data.MixtureRegistry.add(
 
 #Step 1
 
-# Public GCS path for T5 pre-trained model checkpoints
-BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
-PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
+def BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
+def MODEL_SIZE = "11B" @param["11B"]
+  # Set parallelism and batch size to fit on v2-8 TPU (if possible).
+model_parallelism, train_batch_size, keep_checkpoint_max = {
+    "small": (1, 256, 16),
+    "base": (2, 128, 8),
+    "large": (8, 64, 4),
+    "3B": (8, 16, 1),
+    "11B": (8, 16, 1)}[MODEL_SIZE]
+def PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
 
-MODEL_DIR = os.path.join(MODELS_DIR, MODEL_SIZE)
-
-# Set parallelism and batch size to fit on vv-8 TPU (if possible).
-# model_parallelism, train_batch_size, keep_checkpoint_max = {
-    #"small": (1, 256, 16),
-    #"base": (2, 128, 8),
-    #"large": (8, 64, 4),
-    #"3B": (8, 16, 1),
-    #"11B": (8, 16, 1)}[MODEL_SIZE]
-
+def MODEL_DIR = os.path.join(MODELS_DIR, MODEL_SIZE)
+  
+  
 tf.io.gfile.makedirs(MODEL_DIR)
 # The models from our paper are based on the Mesh Tensorflow Transformer.
 model = t5.models.MtfModel(
@@ -317,11 +317,6 @@ with tf.io.gfile.GFile(prediction_files[-1]) as f:
     if q:
       print("Q: " + q)
       print("A: " + a)
-
-
-
-
-
 
 
 
