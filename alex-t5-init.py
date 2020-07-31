@@ -175,3 +175,4 @@ t5.data.MixtureRegistry.add(
     "trivia_all",
     ["nq_context_free", "triviaqa_context_free"],
      default_rate=1.0
+)
