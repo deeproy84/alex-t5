@@ -1,0 +1,26 @@
+https://cloud.google.com/tpu/docs/setup-gcp-account
+
+1. Open Google Cloud Shell
+
+2. export PROJECT_ID=project-id #(can be anything)
+
+3. gcloud config set project $PROJECT_ID
+
+4. gsutil mb -p ${PROJECT_ID} -c standard -l us-central1 -b on gs://bucket-name #(can be anything)
+
+5. ctpu up --zone=us-central1-b  --tf-version=2.3 --name=alex_tpu
+
+6. gcloud compute ssh tpuname --zone=us-central1-b
+
+7. (on vm) export STORAGE_BUCKET=gs://alex_t5
+
+8. (on vm) export TPU_NAME=alex_tpu
+   (on vm) export MODEL_DIR=$STORAGE_BUCKET/models
+   (on vm) DATA_DIR=$STORAGE_BUCKET/data
+   (on vm) export PYTHONPATH="$PYTHONPATH:/usr/share/models"
+
+9. Change to directory that stores the model:
+
+   (on vm) cd /usr/share/models/official/vision/image_classification
+
+10.(on vm) python3 alex_t5_init.py
