@@ -167,7 +167,6 @@ t5.data.MixtureRegistry.add(
 
 #Step 1
 
-MODEL_SIZE = @param["11B"] #@param["small", "base", "large", "3B", "11B"]
 # Public GCS path for T5 pre-trained model checkpoints
 BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
 PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
@@ -175,12 +174,12 @@ PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
 MODEL_DIR = os.path.join(MODELS_DIR, MODEL_SIZE)
 
 # Set parallelism and batch size to fit on vv-8 TPU (if possible).
-model_parallelism, train_batch_size, keep_checkpoint_max = {
-    "small": (1, 256, 16),
-    "base": (2, 128, 8),
-    "large": (8, 64, 4),
-    "3B": (8, 16, 1),
-    "11B": (8, 16, 1)}[MODEL_SIZE]
+# model_parallelism, train_batch_size, keep_checkpoint_max = {
+    #"small": (1, 256, 16),
+    #"base": (2, 128, 8),
+    #"large": (8, 64, 4),
+    #"3B": (8, 16, 1),
+    #"11B": (8, 16, 1)}[MODEL_SIZE]
 
 tf.io.gfile.makedirs(MODEL_DIR)
 # The models from our paper are based on the Mesh Tensorflow Transformer.
@@ -188,13 +187,14 @@ model = t5.models.MtfModel(
     model_dir=MODEL_DIR,
     tpu=TPU_NAME,
     tpu_topology=TPU_TOPOLOGY,
-    model_parallelism=model_parallelism,
-    batch_size=train_batch_size,
+    model_parallelism=8,
+    batch_size=1,
     sequence_length={"inputs": 128, "targets": 32},
     learning_rate_schedule=0.003,
     save_checkpoints_steps=5000,
-    keep_checkpoint_max=keep_checkpoint_max if ON_CLOUD else None,
+    keep_checkpoint_max=1
     iterations_per_loop=100,
+
 )
 
 #Step 2
@@ -317,6 +317,11 @@ with tf.io.gfile.GFile(prediction_files[-1]) as f:
     if q:
       print("Q: " + q)
       print("A: " + a)
+
+
+
+
+
 
 
 
