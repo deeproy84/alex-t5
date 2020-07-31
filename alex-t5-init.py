@@ -1,6 +1,3 @@
-print("Installing dependencies...")
-!pip3 install -q t5
-
 import functools
 import os
 import time
