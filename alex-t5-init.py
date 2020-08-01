@@ -17,32 +17,16 @@ MODELS_DIR = os.path.join(BASE_DIR, "models")
 BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
 MODEL_SIZE = "11B" #@param["11B"]
   # Set parallelism and batch size to fit on v3-8 TPU (if possible).
-model_parallelism, train_batch_size, keep_checkpoint_max = {
+@param
+def (model_parallelism, train_batch_size, keep_checkpoint_max = {
     "small": (1, 256, 16),
     "base": (2, 128, 8),
     "large": (8, 64, 4),
     "3B": (8, 16, 1),
-    "11B": (8, 16, 1)}[MODEL_SIZE]
+    "11B": (8, 16, 1)}[MODEL_SIZE])
 PRETRAINED_DIR = os.path.join(BASE_PRETRAINED_DIR, MODEL_SIZE)
 MODEL_DIR = os.path.join(MODELS_DIR, MODEL_SIZE)
 ON_CLOUD = True
-
-
-if ON_CLOUD:
-  print("Setting up GCS access...")
-  import tensorflow_gcs_config
-  from google.colab import auth
-  # Set credentials for GCS reading/writing from Colab and TPU.
-  TPU_TOPOLOGY = "v3-8"
-  try:
-    tpu = tf.distribute.cluster_resolver.TPUClusterResolver()  # TPU detection
-    TPU_NAME = tpu.get_master()
-    print('Running on TPU:', TPU_NAME)
-  except ValueError:
-    raise BaseException('ERROR: Not connected to a TPU runtime; please see the previous cell in this notebook for instructions!')
-  auth.authenticate_user()
-  tf.config.experimental_connect_to_host(TPU_NAME)
-  tensorflow_gcs_config.configure_gcs_from_colab_auth()
 
 tf.disable_v2_behavior()
 
