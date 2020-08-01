@@ -15,8 +15,8 @@ if not BASE_DIR or BASE_DIR == "gs://":
 DATA_DIR = os.path.join(BASE_DIR, "data")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 BASE_PRETRAINED_DIR = "gs://t5-data/pretrained_models"
-MODEL_SIZE = "11B" @param["11B"]
-  # Set parallelism and batch size to fit on v2-8 TPU (if possible).
+MODEL_SIZE = "11B" #@param["11B"]
+  # Set parallelism and batch size to fit on v3-8 TPU (if possible).
 model_parallelism, train_batch_size, keep_checkpoint_max = {
     "small": (1, 256, 16),
     "base": (2, 128, 8),
